@@ -1,31 +1,57 @@
+
+
 import java.util.Scanner;
+import java.time.LocalDate;
 
-public class BirthdayPartyMissCalculator {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+public class BirthdayChocolate {
+    LocalDate dateOfBirth; 
+    int currentYear; 
+    int missedBirthdays; 
+    int chocolates; 
+    
+    public void takeInputs() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the date of birth (YYYY-MM-DD): ");
+        String dobInput = scanner.nextLine();
+        dateOfBirth = LocalDate.parse(dobInput);
+        System.out.print("Enter the current year: ");
+        currentYear = scanner.nextInt();
+        System.out.print("Enter the number of missed birthdays: ");
+        missedBirthdays = scanner.nextInt();
+        scanner.close();
+    }
 
+    
+    public boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+
+    
+    public void calculateChocolates() {
        
-        System.out.print("Enter friend's year of birth: ");
-        int birthYear = sc.nextInt();
+        if (dateOfBirth.getYear() > currentYear) {
+            System.out.println("Invalid date of birth. It cannot be in the future.");
+            return;
+        }
+    
+        else if (dateOfBirth.getMonthValue() == 2 && dateOfBirth.getDayOfMonth() == 29 && !isLeapYear(currentYear)) {
+            System.out.println("Invalid date of birth. February 29 is not valid in the current year.");
+            return;
+        }
+     
+        else if (dateOfBirth.getMonthValue() == 2 && dateOfBirth.getDayOfMonth() == 29 && isLeapYear(currentYear)) {
+            chocolates = ((currentYear - dateOfBirth.getYear())/4) - missedBirthdays; 
+        }
+        else{
+            chocolates = (currentYear - dateOfBirth.getYear()) - missedBirthdays; 
+        }
 
-        
-        System.out.print("Enter current year: ");
-        int currentYear = sc.nextInt();
-
-        System.out.print("Enter how often Asha misses (e.g., 2 means every 2nd party): ");
-        int missFrequency = sc.nextInt();
-
-        int totalParties = currentYear - birthYear + 1;
-
-        
-        int missedParties = totalParties / missFrequency;
-
-        
-        System.out.println("Total parties invited: " + totalParties);
-        System.out.println("Parties missed: " + missedParties);
-        System.out.println("Parties attended: " + (totalParties - missedParties));
-
-        sc.close();
+    }
+   
+    public static void main(String[] args) {
+        BirthdayChocolate birthdayChocolate = new BirthdayChocolate();
+        birthdayChocolate.takeInputs(); // 
+        birthdayChocolate.calculateChocolates();
+        System.out.println("Number of chocolates to give: " + birthdayChocolate.chocolates); 
     }
 }
-
